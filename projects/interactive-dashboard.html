@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة متابعة زوار الموقع</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f5f7fc;--ink:#182238;--muted:#7c879b;--blue:#4f46e5;--line:#e8ecf4}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--ink);font-family:Tahoma,"Segoe UI",sans-serif}
+.sidebar{background:linear-gradient(160deg,#171d3b,#292d66 70%,#4f46e5);color:#fff;min-height:100vh}
+.logo{height:44px;width:44px;border-radius:14px;background:#ffffff20;display:grid;place-items:center;font-size:1.3rem}
+.sidebar .nav-link{color:#d9ddf6;border-radius:12px;padding:.8rem 1rem;margin:.2rem 0}
+.sidebar .nav-link.active,.sidebar .nav-link:hover{background:#ffffff20;color:#fff}
+.panel,.stat{background:white;border:1px solid var(--line);border-radius:19px;box-shadow:0 8px 26px #202a5010}
+.panel{padding:22px}.stat{padding:20px;height:100%}.stat-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:1.25rem}
+.num{font-size:1.9rem;font-weight:900;letter-spacing:-.5px}.muted{color:var(--muted)}.tiny{font-size:.82rem}
+.form-select,.form-control,.btn{border-radius:11px}.form-select,.form-control{border-color:#e0e6f0;padding:.68rem .8rem}
+.btn-primary{background:var(--blue);border-color:var(--blue)}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#16b981;margin-left:6px}
+.table thead th{background:#f6f8fc;color:#748097;border:0;white-space:nowrap;font-size:.85rem}
+.table td{vertical-align:middle}.pill{background:#e9fbf3;color:#07875a;border-radius:50px;padding:5px 10px;font-size:.78rem}
+.progress{height:7px;background:#edf0f7;border-radius:20px}.progress-bar{border-radius:20px}
+.section-title{font-weight:800}.live-dot{display:inline-block;width:8px;height:8px;background:#20c997;border-radius:50%;box-shadow:0 0 0 4px #20c99725}
+@media(max-width:767px){.sidebar{min-height:auto}.sidebar .nav{flex-direction:row;overflow:auto}.sidebar .nav-link{white-space:nowrap}.main{padding:14px!important}.panel{padding:16px}.num{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="container-fluid"><div class="row g-0">
+<aside class="col-lg-2 sidebar p-3 p-lg-4">
+  <div class="d-flex align-items-center gap-3 mb-4"><div class="logo"><i class="bi bi-activity"></i></div><div><div class="fw-bold fs-5">Visitor Pulse</div><small class="text-white-50">تحليلات الموقع</small></div></div>
+  <div class="small text-white-50 px-2 mb-2">لوحة التحكم</div>
+  <nav class="nav flex-column">
+    <a class="nav-link active" href="#overview"><i class="bi bi-grid ms-2"></i>نظرة عامة</a>
+    <a class="nav-link" href="#traffic"><i class="bi bi-graph-up ms-2"></i>مصادر الزيارات</a>
+    <a class="nav-link" href="#pages"><i class="bi bi-file-earmark-text ms-2"></i>الصفحات الأكثر زيارة</a>
+  </nav>
+  <div class="mt-5 p-3 rounded-4" style="background:#ffffff12"><i class="bi bi-info-circle fs-4"></i><div class="fw-bold mt-2">لوحة تجريبية</div><small class="text-white-50">الأرقام المعروضة نموذجية للتجربة وليست زيارات حقيقية.</small></div>
+</aside>
+<main class="col-lg-10 main p-3 p-lg-4">
+<header class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+  <div><div class="muted tiny mb-1">تحليلات وأداء الموقع</div><h1 class="h3 fw-bold mb-1">متابعة زوار الصفحة</h1><div class="muted">راقب الزيارات والتفاعل ومصادر الوصول من مكان واحد.</div></div>
+  <div class="d-flex flex-wrap gap-2 align-items-center"><span class="badge text-bg-light border py-2 px-3"><span class="live-dot ms-2"></span>تحديث الواجهة مباشر</span><select class="form-select" id="rangeSelect" style="width:auto"><option value="7">آخر 7 أيام</option><option value="14">آخر 14 يومًا</option><option value="30">آخر 30 يومًا</option></select><button class="btn btn-primary" id="refreshBtn"><i class="bi bi-arrow-clockwise ms-1"></i>تحديث العرض</button></div>
+</header>
+<section id="overview">
+<div class="row g-3 mb-4">
+ <div class="col-6 col-xl-3"><div class="stat"><div class="d-flex justify-content-between align-items-start"><div><div class="muted tiny mb-2">إجمالي الزيارات</div><div class="num" id="visits">12,486</div></div><div class="stat-icon" style="background:#eeedff;color:#4f46e5"><i class="bi bi-eye"></i></div></div><div class="tiny mt-3"><span class="text-success fw-bold"><i class="bi bi-arrow-up-left"></i> 12.8%</span><span class="muted me-1">مقارنة بالفترة السابقة</span></div></div></div>
+ <div class="col-6 col-xl-3"><div class="stat"><div class="d-flex justify-content-between align-items-start"><div><div class="muted tiny mb-2">زوار فريدون</div><div class="num" id="unique">8,352</div></div><div class="stat-icon" style="background:#e6faf3;color:#0e9f6e"><i class="bi bi-people"></i></div></div><div class="tiny mt-3"><span class="text-success fw-bold"><i class="bi bi-arrow-up-left"></i> 8.4%</span><span class="muted me-1">مقارنة بالفترة السابقة</span></div></div></div>
+ <div class="col-6 col-xl-3"><div class="stat"><div class="d-flex justify-content-between align-items-start"><div><div class="muted tiny mb-2">مشاهدات الصفحات</div><div class="num" id="views">19,624</div></div><div class="stat-icon" style="background:#fff3e4;color:#df8b1b"><i class="bi bi-window-stack"></i></div></div><div class="tiny mt-3"><span class="text-success fw-bold"><i class="bi bi-arrow-up-left"></i> 16.2%</span><span class="muted me-1">مقارنة بالفترة السابقة</span></div></div></div>
+ <div class="col-6 col-xl-3"><div class="stat"><div class="d-flex justify-content-between align-items-start"><div><div class="muted tiny mb-2">متوسط مدة الزيارة</div><div class="num" id="duration">02:48</div></div><div class="stat-icon" style="background:#ffeaf0;color:#d94670"><i class="bi bi-clock-history"></i></div></div><div class="tiny mt-3"><span class="text-danger fw-bold"><i class="bi bi-arrow-down-left"></i> 2.1%</span><span class="muted me-1">مقارنة بالفترة السابقة</span></div></div></div>
+</div>
+<div class="row g-3 mb-4">
+ <div class="col-xl-8"><div class="panel h-100"><div class="d-flex justify-content-between align-items-start mb-3"><div><h2 class="h5 section-title mb-1">حركة الزوار</h2><div class="muted tiny">عدد الزيارات خلال الفترة المحددة</div></div><span class="badge text-bg-light border">زيارات / يوم</span></div><canvas id="visitsChart" height="115"></canvas></div></div>
+ <div class="col-xl-4" id="traffic"><div class="panel h-100"><h2 class="h5 section-title mb-1">مصادر الزيارات</h2><div class="muted tiny mb-3">من أين وصل الزوار إلى موقعك؟</div><canvas id="sourceChart" height="190"></canvas><div id="sourceLegend" class="mt-3"></div></div></div>
+</div>
+<div class="row g-3 mb-4">
+ <div class="col-xl-6"><div class="panel h-100"><h2 class="h5 section-title mb-3">الأجهزة المستخدمة</h2><div class="d-flex align-items-center gap-3 mb-4"><div class="stat-icon" style="background:#eeedff;color:#4f46e5"><i class="bi bi-phone"></i></div><div class="flex-grow-1"><div class="d-flex justify-content-between mb-2"><span>الهاتف المحمول</span><strong id="mobilePct">68%</strong></div><div class="progress"><div class="progress-bar" id="mobileBar" style="width:68%;background:#4f46e5"></div></div></div></div><div class="d-flex align-items-center gap-3 mb-4"><div class="stat-icon" style="background:#e6faf3;color:#0e9f6e"><i class="bi bi-laptop"></i></div><div class="flex-grow-1"><div class="d-flex justify-content-between mb-2"><span>الكمبيوتر</span><strong id="desktopPct">25%</strong></div><div class="progress"><div class="progress-bar" id="desktopBar" style="width:25%;background:#0e9f6e"></div></div></div></div><div class="d-flex align-items-center gap-3"><div class="stat-icon" style="background:#fff3e4;color:#df8b1b"><i class="bi bi-tablet"></i></div><div class="flex-grow-1"><div class="d-flex justify-content-between mb-2"><span>الأجهزة اللوحية</span><strong id="tabletPct">7%</strong></div><div class="progress"><div class="progress-bar" id="tabletBar" style="width:7%;background:#df8b1b"></div></div></div></div></div></div>
+ <div class="col-xl-6" id="pages"><div class="panel h-100"><div class="d-flex justify-content-between align-items-center mb-3"><div><h2 class="h5 section-title mb-1">الصفحات الأكثر زيارة</h2><div class="muted tiny">أكثر الصفحات مشاهدة في المثال</div></div><i class="bi bi-file-earmark-bar-graph fs-4 text-primary"></i></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>الصفحة</th><th>المشاهدات</th><th>النسبة</th></tr></thead><tbody id="pagesTable"></tbody></table></div></div></div>
+</div>
+<div class="panel"><div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><h2 class="h5 section-title mb-1">نشاط الزوار المباشر</h2><div class="muted tiny">قائمة تجريبية لتوضيح شكل سجل النشاط</div></div><span class="pill"><span class="status-dot"></span>بيانات توضيحية</span></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>الصفحة</th><th>مصدر الوصول</th><th>الجهاز</th><th>وقت الزيارة</th><th>الحالة</th></tr></thead><tbody id="activityTable"></tbody></table></div></div>
+<footer class="text-center muted tiny py-4">Visitor Pulse · لوحة متابعة الزوار</footer>
+</main></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const initial={7:{visits:12486,unique:8352,views:19624,duration:'02:48'},14:{visits:24718,unique:16490,views:38940,duration:'02:42'},30:{visits:51842,unique:34926,views:82713,duration:'02:51'}};
+let chart=null,sourceChart=null;
+const pages=[['/','الرئيسية',6820],['/product','تعريف المنتج',4925],['/features','المميزات',3120],['/contact','تواصل معنا',1846],['/about','من نحن',1210]];
+const sources=[['بحث Google',42],['مواقع التواصل',28],['دخول مباشر',19],['مواقع أخرى',11]];
+function render(){
+ const range=Number(document.getElementById('rangeSelect').value),d=initial[range];
+ ['visits','unique','views','duration'].forEach(k=>document.getElementById(k).textContent=typeof d[k]==='number'?d[k].toLocaleString('en-US'):d[k]);
+ const labels=[],values=[];
+ for(let i=range-1;i>=0;i--){let dt=new Date();dt.setDate(dt.getDate()-i);labels.push(dt.toLocaleDateString('ar-EG',{day:'numeric',month:'short'}));values.push(Math.round(d.visits/range*(.68+Math.random()*.66)));}
+ if(chart)chart.destroy();
+ chart=new Chart(document.getElementById('visitsChart'),{type:'line',data:{labels,datasets:[{label:'الزيارات',data:values,borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,.12)',fill:true,tension:.35,pointRadius:range>14?0:3,pointHoverRadius:5,borderWidth:3}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#edf0f7'}},x:{grid:{display:false},ticks:{maxTicksLimit:10}}}}});
+ if(sourceChart)sourceChart.destroy();
+ sourceChart=new Chart(document.getElementById('sourceChart'),{type:'doughnut',data:{labels:sources.map(x=>x[0]),datasets:[{data:sources.map(x=>x[1]),backgroundColor:['#4f46e5','#0eaf83','#f5a524','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{cutout:'67%',plugins:{legend:{display:false}}}});
+ document.getElementById('sourceLegend').innerHTML=sources.map((s,i)=>`<div class="d-flex justify-content-between align-items-center mb-2 tiny"><span><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:${['#4f46e5','#0eaf83','#f5a524','#a78bfa'][i]};margin-left:7px"></span>${s[0]}</span><strong>${s[1]}%</strong></div>`).join('');
+ const total=pages.reduce((a,p)=>a+p[2],0);
+ document.getElementById('pagesTable').innerHTML=pages.map(p=>`<tr><td><code dir="ltr">${p[0]}</code><div class="tiny muted">${p[1]}</div></td><td class="fw-bold">${Math.round(p[2]*range/7).toLocaleString('en-US')}</td><td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1"><div class="progress-bar" style="width:${p[2]/total*100}%;background:#4f46e5"></div></div><small>${Math.round(p[2]/total*100)}%</small></div></td></tr>`).join('');
+ const acts=[['/product','مواقع التواصل','هاتف محمول','منذ دقيقة'],['/','بحث Google','كمبيوتر','منذ 3 دقائق'],['/features','دخول مباشر','هاتف محمول','منذ 5 دقائق'],['/contact','بحث Google','جهاز لوحي','منذ 8 دقائق'],['/product','مواقع التواصل','هاتف محمول','منذ 11 دقيقة']];
+ document.getElementById('activityTable').innerHTML=acts.map(a=>`<tr><td><code dir="ltr">${a[0]}</code></td><td>${a[1]}</td><td>${a[2]}</td><td class="muted">${a[3]}</td><td><span class="pill">مكتملة</span></td></tr>`).join('');
+ const mobile=68,desktop=25,tablet=7;
+ document.getElementById('mobilePct').textContent=mobile+'%';document.getElementById('desktopPct').textContent=desktop+'%';document.getElementById('tabletPct').textContent=tablet+'%';
+}
+document.getElementById('rangeSelect').addEventListener('change',render);
+document.getElementById('refreshBtn').addEventListener('click',()=>{render();const b=document.getElementById('refreshBtn');b.innerHTML='<i class="bi bi-check2 ms-1"></i>تم تحديث العرض';setTimeout(()=>b.innerHTML='<i class="bi bi-arrow-clockwise ms-1"></i>تحديث العرض',1200)});
+render();
+</script>
+</body></html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة إدخال البيانات والتقارير</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    :root{--navy:#172554;--blue:#3457d5;--violet:#7758d8;--bg:#f4f6fb;--ink:#182238;--muted:#7b8498}
+    *{box-sizing:border-box}
+    body{background:var(--bg);font-family:Tahoma,"Segoe UI",sans-serif;color:var(--ink)}
+    .sidebar{background:linear-gradient(160deg,#172554,#263c7c 70%,#3457d5);color:#fff;min-height:100vh}
+    .brand-mark{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:#ffffff22;font-size:1.4rem}
+    .sidebar .nav-link{color:#dbe5ff;border-radius:12px;padding:.8rem 1rem;margin:.22rem 0;text-align:right}
+    .sidebar .nav-link.active,.sidebar .nav-link:hover{background:#ffffff20;color:white}
+    .topbar,.panel,.stat-card{background:#fff;border:1px solid #e9edf5;border-radius:18px;box-shadow:0 7px 24px #1a2b5010}
+    .stat-card{padding:20px;height:100%;position:relative;overflow:hidden}
+    .stat-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:1.3rem}
+    .stat-number{font-size:1.8rem;font-weight:800;letter-spacing:-.5px}
+    .muted{color:var(--muted)}
+    .panel{padding:22px}
+    .form-control,.form-select{border-color:#e0e6f0;border-radius:11px;padding:.72rem .85rem}
+    .form-control:focus,.form-select:focus{border-color:#8ba1ff;box-shadow:0 0 0 .22rem #3457d51a}
+    .btn{border-radius:11px;padding:.65rem 1rem;font-weight:600}
+    .btn-primary{background:var(--blue);border-color:var(--blue)}
+    .table thead th{background:#f5f7fc;color:#68738b;font-weight:700;border-bottom:0;white-space:nowrap}
+    .table td{vertical-align:middle}
+    .badge-soft{background:#edf1ff;color:#3457d5}
+    .section-view{display:none}
+    .section-view.active{display:block;animation:appear .22s ease}
+    @keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+    .avatar{width:40px;height:40px;border-radius:13px;background:#edf1ff;color:#3457d5;display:grid;place-items:center;font-weight:800}
+    .empty-state{padding:35px;text-align:center;color:var(--muted)}
+    .mini-label{font-size:.82rem;color:var(--muted)}
+    .lang-en{direction:ltr;text-align:left}
+    @media(max-width:767px){.sidebar{min-height:auto}.sidebar .nav{flex-direction:row;overflow:auto}.sidebar .nav-link{white-space:nowrap}.main-content{padding:14px!important}.panel{padding:16px}.stat-number{font-size:1.5rem}}
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row g-0">
+    <aside class="col-lg-2 sidebar p-3 p-lg-4">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="brand-mark"><i class="bi bi-grid-1x2-fill"></i></div>
+        <div><div class="fw-bold fs-5" data-ar="لوحة البيانات" data-en="Data Dashboard">لوحة البيانات</div><small class="text-white-50">DATA STUDIO</small></div>
+      </div>
+      <div class="small text-white-50 mb-2 px-2" data-ar="القائمة الرئيسية" data-en="MAIN MENU">القائمة الرئيسية</div>
+      <nav class="nav flex-column" id="mainNav">
+        <a href="#" class="nav-link active" data-target="dashboard"><i class="bi bi-speedometer2 ms-2"></i><span data-ar="الرئيسية" data-en="Dashboard">الرئيسية</span></a>
+        <a href="#" class="nav-link" data-target="entry"><i class="bi bi-pencil-square ms-2"></i><span data-ar="إدخال البيانات" data-en="Data Entry">إدخال البيانات</span></a>
+        <a href="#" class="nav-link" data-target="reports"><i class="bi bi-bar-chart-line ms-2"></i><span data-ar="التقارير" data-en="Reports">التقارير</span></a>
+      </nav>
+      <div class="mt-5 p-3 rounded-4" style="background:#ffffff12">
+        <i class="bi bi-shield-check fs-4"></i>
+        <div class="fw-bold mt-2" data-ar="خصوصية البيانات" data-en="Data privacy">خصوصية البيانات</div>
+        <small class="text-white-50" data-ar="البيانات مؤقتة داخل الصفحة فقط ولا يتم حفظها." data-en="Data stays temporarily in this page and is not saved.">البيانات مؤقتة داخل الصفحة فقط ولا يتم حفظها.</small>
+      </div>
+      <button id="langBtn" class="btn btn-outline-light w-100 mt-4"><i class="bi bi-translate ms-2"></i>English / العربية</button>
+    </aside>
+
+    <main class="col-lg-10 main-content p-3 p-lg-4">
+      <div class="topbar d-flex flex-wrap align-items-center justify-content-between gap-3 p-3 p-lg-4 mb-4">
+        <div><div class="muted small" data-ar="مرحباً بك" data-en="WELCOME BACK">مرحباً بك</div><h1 class="h3 fw-bold mb-1" id="pageTitle" data-ar="نظرة عامة" data-en="Overview">نظرة عامة</h1><div class="muted" data-ar="أدخل بياناتك وتابع المؤشرات والتقارير مباشرة." data-en="Enter your data and follow live metrics and reports.">أدخل بياناتك وتابع المؤشرات والتقارير مباشرة.</div></div>
+        <div class="d-flex align-items-center gap-2"><span class="badge rounded-pill text-bg-success-subtle text-success-emphasis px-3 py-2"><i class="bi bi-circle-fill small ms-1"></i><span data-ar="جلسة مؤقتة" data-en="Temporary session">جلسة مؤقتة</span></span><button class="btn btn-primary" onclick="showSection('entry')"><i class="bi bi-plus-lg ms-1"></i><span data-ar="إضافة سجل" data-en="Add record">إضافة سجل</span></button></div>
+      </div>
+
+      <section class="section-view active" id="dashboard">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><div class="muted mb-2" data-ar="إجمالي السجلات" data-en="Total records">إجمالي السجلات</div><div class="stat-number" id="totalCount">0</div></div><div class="stat-icon" style="background:#edf1ff;color:#3457d5"><i class="bi bi-database"></i></div></div><div class="mini-label mt-3" data-ar="كل البيانات المدخلة" data-en="All entered records">كل البيانات المدخلة</div></div></div>
+          <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><div class="muted mb-2" data-ar="إجمالي المبالغ" data-en="Total amount">إجمالي المبالغ</div><div class="stat-number" id="totalAmount">0</div></div><div class="stat-icon" style="background:#e6faf3;color:#15966b"><i class="bi bi-currency-exchange"></i></div></div><div class="mini-label mt-3" data-ar="مجموع القيم المسجلة" data-en="Sum of entered values">مجموع القيم المسجلة</div></div></div>
+          <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><div class="muted mb-2" data-ar="عدد التصنيفات" data-en="Categories">عدد التصنيفات</div><div class="stat-number" id="categoryCount">0</div></div><div class="stat-icon" style="background:#fff3e6;color:#e88a22"><i class="bi bi-tags"></i></div></div><div class="mini-label mt-3" data-ar="تصنيفات مختلفة" data-en="Unique categories">تصنيفات مختلفة</div></div></div>
+          <div class="col-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between align-items-start"><div><div class="muted mb-2" data-ar="متوسط القيمة" data-en="Average amount">متوسط القيمة</div><div class="stat-number" id="averageAmount">0</div></div><div class="stat-icon" style="background:#f3eaff;color:#8c55cc"><i class="bi bi-graph-up-arrow"></i></div></div><div class="mini-label mt-3" data-ar="متوسط قيمة السجل" data-en="Average per record">متوسط قيمة السجل</div></div></div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-xl-8"><div class="panel h-100"><div class="d-flex justify-content-between align-items-center mb-3"><div><h2 class="h5 fw-bold mb-1" data-ar="ملخص القيم" data-en="Values overview">ملخص القيم</h2><div class="muted small" data-ar="توزيع مجموع القيم حسب التصنيف" data-en="Total value by category">توزيع مجموع القيم حسب التصنيف</div></div><i class="bi bi-bar-chart-fill text-primary fs-4"></i></div><canvas id="barChart" height="120"></canvas></div></div>
+          <div class="col-xl-4"><div class="panel h-100"><h2 class="h5 fw-bold mb-1" data-ar="توزيع السجلات" data-en="Record distribution">توزيع السجلات</h2><div class="muted small mb-3" data-ar="عدد السجلات في كل تصنيف" data-en="Records per category">عدد السجلات في كل تصنيف</div><canvas id="pieChart" height="220"></canvas></div></div>
+        </div>
+        <div class="panel"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 fw-bold mb-0" data-ar="أحدث السجلات" data-en="Recent records">أحدث السجلات</h2><button class="btn btn-sm btn-outline-primary" onclick="showSection('reports')" data-ar="عرض التقرير" data-en="View report">عرض التقرير</button></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th data-ar="الاسم" data-en="Name">الاسم</th><th data-ar="التصنيف" data-en="Category">التصنيف</th><th data-ar="التاريخ" data-en="Date">التاريخ</th><th data-ar="القيمة" data-en="Amount">القيمة</th></tr></thead><tbody id="recentRows"></tbody></table></div><div id="recentEmpty" class="empty-state"><i class="bi bi-inbox fs-1 d-block mb-2"></i><span data-ar="لا توجد بيانات حتى الآن. ابدأ بإضافة سجل جديد." data-en="No data yet. Add your first record.">لا توجد بيانات حتى الآن. ابدأ بإضافة سجل جديد.</span></div></div>
+      </section>
+
+      <section class="section-view" id="entry">
+        <div class="panel mb-4"><div class="d-flex align-items-start gap-3 mb-4"><div class="stat-icon" style="background:#edf1ff;color:#3457d5"><i class="bi bi-file-earmark-plus"></i></div><div><h2 class="h4 fw-bold mb-1" data-ar="إدخال سجل جديد" data-en="Enter a new record">إدخال سجل جديد</h2><div class="muted" data-ar="املأ الحقول التالية، وستتحدث التقارير فوراً." data-en="Complete the fields; reports update instantly.">املأ الحقول التالية، وستتحدث التقارير فوراً.</div></div></div>
+          <form id="recordForm" class="row g-3">
+            <input type="hidden" id="editId">
+            <div class="col-md-6"><label class="form-label fw-semibold" for="name" data-ar="الاسم / البيان" data-en="Name / Description">الاسم / البيان</label><input class="form-control" id="name" required maxlength="120" placeholder="مثال: مبيعات الفرع"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold" for="category" data-ar="التصنيف" data-en="Category">التصنيف</label><input class="form-control" id="category" required maxlength="80" placeholder="مثال: مبيعات"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold" for="date" data-ar="التاريخ" data-en="Date">التاريخ</label><input class="form-control" id="date" type="date" required></div>
+            <div class="col-md-6"><label class="form-label fw-semibold" for="amount" data-ar="القيمة / المبلغ" data-en="Amount / Value">القيمة / المبلغ</label><input class="form-control" id="amount" type="number" min="0" step="0.01" value="0" required></div>
+            <div class="col-12"><label class="form-label fw-semibold" for="notes" data-ar="ملاحظات (اختياري)" data-en="Notes (optional)">ملاحظات (اختياري)</label><textarea class="form-control" id="notes" rows="3" maxlength="500" placeholder="أضف أي تفاصيل إضافية..."></textarea></div>
+            <div class="col-12 d-flex flex-wrap gap-2"><button class="btn btn-primary" type="submit"><i class="bi bi-check2-circle ms-1"></i><span id="submitText" data-ar="إضافة السجل" data-en="Add record">إضافة السجل</span></button><button class="btn btn-light border" type="button" id="resetBtn" data-ar="مسح الحقول" data-en="Clear fields">مسح الحقول</button></div>
+          </form>
+        </div>
+        <div class="alert alert-info border-0 rounded-4"><i class="bi bi-info-circle ms-2"></i><span data-ar="تنبيه: لا يتم حفظ البيانات في ملف أو قاعدة بيانات أو ذاكرة دائمة. ستُمسح عند تحديث الصفحة أو إغلاقها." data-en="Note: data is not saved to a file, database, or persistent storage. It disappears when you refresh or close the page.">تنبيه: لا يتم حفظ البيانات في ملف أو قاعدة بيانات أو ذاكرة دائمة. ستُمسح عند تحديث الصفحة أو إغلاقها.</span></div>
+      </section>
+
+      <section class="section-view" id="reports">
+        <div class="panel mb-4"><div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3"><div><h2 class="h4 fw-bold mb-1" data-ar="التقارير التفصيلية" data-en="Detailed reports">التقارير التفصيلية</h2><div class="muted" data-ar="ابحث وصفِّ البيانات الحالية دون حفظها." data-en="Search and filter current in-memory data.">ابحث وصفِّ البيانات الحالية دون حفظها.</div></div><button class="btn btn-outline-danger" id="clearAll"><i class="bi bi-trash3 ms-1"></i><span data-ar="مسح كل البيانات" data-en="Clear all data">مسح كل البيانات</span></button></div>
+          <div class="row g-2"><div class="col-md-5"><input class="form-control" id="searchBox" placeholder="ابحث بالاسم أو التصنيف..."></div><div class="col-md-4"><select class="form-select" id="filterCategory"><option value="" data-ar="كل التصنيفات" data-en="All categories">كل التصنيفات</option></select></div><div class="col-md-3"><button class="btn btn-light border w-100" id="clearFilters"><i class="bi bi-arrow-counterclockwise ms-1"></i><span data-ar="إعادة ضبط الفلاتر" data-en="Reset filters">إعادة ضبط الفلاتر</span></button></div></div>
+        </div>
+        <div class="row g-3 mb-4"><div class="col-md-4"><div class="stat-card"><div class="muted mb-2" data-ar="نتائج التقرير" data-en="Report results">نتائج التقرير</div><div class="stat-number" id="filteredCount">0</div></div></div><div class="col-md-4"><div class="stat-card"><div class="muted mb-2" data-ar="مجموع النتائج" data-en="Results total">مجموع النتائج</div><div class="stat-number" id="filteredTotal">0</div></div></div><div class="col-md-4"><div class="stat-card"><div class="muted mb-2" data-ar="متوسط النتائج" data-en="Results average">متوسط النتائج</div><div class="stat-number" id="filteredAvg">0</div></div></div></div>
+        <div class="panel"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th data-ar="الاسم / البيان" data-en="Name / Description">الاسم / البيان</th><th data-ar="التصنيف" data-en="Category">التصنيف</th><th data-ar="التاريخ" data-en="Date">التاريخ</th><th data-ar="القيمة" data-en="Amount">القيمة</th><th data-ar="ملاحظات" data-en="Notes">ملاحظات</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th></tr></thead><tbody id="reportRows"></tbody></table></div><div id="reportEmpty" class="empty-state"><i class="bi bi-search fs-1 d-block mb-2"></i><span data-ar="لا توجد سجلات مطابقة." data-en="No matching records.">لا توجد سجلات مطابقة.</span></div></div>
+      </section>
+      <footer class="text-center muted small py-4">DATA STUDIO <span class="mx-1">•</span><span data-ar="البيانات مؤقتة ولا تُحفظ" data-en="Temporary data only">البيانات مؤقتة ولا تُحفظ</span></footer>
+    </main>
+  </div>
+</div>
+<div class="toast-container position-fixed bottom-0 start-0 p-3"><div id="appToast" class="toast border-0 text-bg-dark" role="status"><div class="d-flex"><div class="toast-body" id="toastText">تم</div><button type="button" class="btn-close btn-close-white me-auto ms-2" data-bs-dismiss="toast"></button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let records = []; // Session memory only. Intentionally no localStorage/sessionStorage/database.
+let currentLang = 'ar', nextId = 1, barChart = null, pieChart = null;
+const $ = id => document.getElementById(id);
+const fmt = n => new Intl.NumberFormat(currentLang === 'ar' ? 'ar-EG' : 'en-US',{maximumFractionDigits:2}).format(n || 0);
+const words = (ar,en) => currentLang === 'ar' ? ar : en;
+function toast(message){$('toastText').textContent=message;bootstrap.Toast.getOrCreateInstance($('appToast')).show();}
+function showSection(id){
+ document.querySelectorAll('.section-view').forEach(s=>s.classList.toggle('active',s.id===id));
+ document.querySelectorAll('#mainNav .nav-link').forEach(a=>a.classList.toggle('active',a.dataset.target===id));
+ const titleMap={dashboard:words('نظرة عامة','Overview'),entry:words('إدخال البيانات','Data entry'),reports:words('التقارير','Reports')};
+ $('pageTitle').textContent=titleMap[id]; if(id==='entry'&&!$('date').value)$('date').value=new Date().toISOString().slice(0,10);
+ if(id==='reports')renderReports();
+}
+document.querySelectorAll('#mainNav .nav-link').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();showSection(a.dataset.target)}));
+function resetForm(){ $('recordForm').reset();$('editId').value='';$('amount').value='0';$('submitText').textContent=words('إضافة السجل','Add record');$('date').value=new Date().toISOString().slice(0,10);}
+$('resetBtn').addEventListener('click',resetForm);
+$('recordForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const id=$('editId').value?Number($('editId').value):nextId++;
+ const item={id,name:$('name').value.trim(),category:$('category').value.trim(),date:$('date').value,amount:Number($('amount').value)||0,notes:$('notes').value.trim()};
+ if(!item.name||!item.category||!item.date)return;
+ const index=records.findIndex(r=>r.id===id);
+ if(index>=0){records[index]=item;toast(words('تم تعديل السجل','Record updated'));}
+ else{records.unshift(item);toast(words('تمت إضافة السجل','Record added'));}
+ resetForm();refreshAll();showSection('reports');
+});
+function editRecord(id){
+ const r=records.find(x=>x.id===id);if(!r)return;
+ $('editId').value=r.id;$('name').value=r.name;$('category').value=r.category;$('date').value=r.date;$('amount').value=r.amount;$('notes').value=r.notes;
+ $('submitText').textContent=words('حفظ التعديلات','Save changes');showSection('entry');window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteRecord(id){if(!confirm(words('هل تريد حذف هذا السجل؟','Delete this record?')))return;records=records.filter(r=>r.id!==id);refreshAll();toast(words('تم حذف السجل','Record deleted'));}
+function categoryStats(list){
+ const out={};list.forEach(r=>{if(!out[r.category])out[r.category]={count:0,total:0};out[r.category].count++;out[r.category].total+=r.amount;});return out;
+}
+function renderTableRows(list,mode){
+ const body=$(mode==='recent'?'recentRows':'reportRows');
+ if(mode==='recent'){
+  const rows=list.slice(0,5);body.innerHTML=rows.map(r=>`<tr><td><div class="d-flex align-items-center gap-2"><div class="avatar">${esc(r.name.slice(0,1))}</div><span class="fw-semibold">${esc(r.name)}</span></div></td><td><span class="badge badge-soft rounded-pill">${esc(r.category)}</span></td><td>${esc(r.date)}</td><td class="fw-bold">${fmt(r.amount)}</td></tr>`).join('');
+  $('recentEmpty').style.display=rows.length?'none':'block';return;
+ }
+ body.innerHTML=list.map(r=>`<tr><td class="fw-semibold">${esc(r.name)}</td><td><span class="badge badge-soft rounded-pill">${esc(r.category)}</span></td><td>${esc(r.date)}</td><td class="fw-bold">${fmt(r.amount)}</td><td class="muted small">${esc(r.notes||'—')}</td><td class="text-nowrap"><button class="btn btn-sm btn-light border" title="${words('تعديل','Edit')}" onclick="editRecord(${r.id})"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-outline-danger" title="${words('حذف','Delete')}" onclick="deleteRecord(${r.id})"><i class="bi bi-trash"></i></button></td></tr>`).join('');
+ $('reportEmpty').style.display=list.length?'none':'block';
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function updateCharts(){
+ const stats=categoryStats(records), labels=Object.keys(stats), totals=labels.map(k=>stats[k].total), counts=labels.map(k=>stats[k].count);
+ const colors=['#3457d5','#24b891','#f2a541','#8b5bd6','#e35d7b','#35a6c9','#8493ad','#d4bd43'];
+ if(barChart)barChart.destroy();if(pieChart)pieChart.destroy();
+ barChart=new Chart($('barChart'),{type:'bar',data:{labels,datasets:[{label:words('إجمالي القيمة','Total value'),data:totals,backgroundColor:colors,borderRadius:8,maxBarThickness:38}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#edf0f6'}},x:{grid:{display:false}}}}});
+ pieChart=new Chart($('pieChart'),{type:'doughnut',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderWidth:0,hoverOffset:5}]},options:{responsive:true,cutout:'68%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8,padding:15}}}}});
+}
+function refreshAll(){
+ const total=records.reduce((s,r)=>s+r.amount,0);
+ $('totalCount').textContent=fmt(records.length);$('totalAmount').textContent=fmt(total);
+ $('categoryCount').textContent=fmt(new Set(records.map(r=>r.category)).size);
+ $('averageAmount').textContent=fmt(records.length?total/records.length:0);
+ renderTableRows(records,'recent');updateCategoryOptions();renderReports();updateCharts();
+}
+function updateCategoryOptions(){
+ const select=$('filterCategory'),val=select.value, cats=[...new Set(records.map(r=>r.category))].sort((a,b)=>a.localeCompare(b));
+ select.innerHTML=`<option value="">${words('كل التصنيفات','All categories')}</option>`+cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+ if(cats.includes(val))select.value=val;
+}
+function renderReports(){
+ const query=$('searchBox').value.trim().toLowerCase(),cat=$('filterCategory').value;
+ const list=records.filter(r=>(!cat||r.category===cat)&&(!query||(r.name+' '+r.category+' '+r.notes).toLowerCase().includes(query)));
+ const total=list.reduce((s,r)=>s+r.amount,0);
+ $('filteredCount').textContent=fmt(list.length);$('filteredTotal').textContent=fmt(total);$('filteredAvg').textContent=fmt(list.length?total/list.length:0);
+ renderTableRows(list,'report');
+}
+$('searchBox').addEventListener('input',renderReports);$('filterCategory').addEventListener('change',renderReports);
+$('clearFilters').addEventListener('click',()=>{$('searchBox').value='';$('filterCategory').value='';renderReports();});
+$('clearAll').addEventListener('click',()=>{if(!records.length)return;if(confirm(words('سيتم حذف كل البيانات من الجلسة الحالية. هل أنت متأكد؟','Clear all data in this session?'))){records=[];nextId=1;refreshAll();toast(words('تم مسح كل البيانات','All data cleared'));}});
+$('langBtn').addEventListener('click',()=>{
+ currentLang=currentLang==='ar'?'en':'ar';document.documentElement.lang=currentLang;document.documentElement.dir=currentLang==='ar'?'rtl':'ltr';
+ document.querySelectorAll('[data-ar][data-en]').forEach(el=>{const t=el.dataset[currentLang];if(t!==undefined)el.textContent=t;});
+ $('name').placeholder=words('مثال: مبيعات الفرع','e.g. Branch sales');$('category').placeholder=words('مثال: مبيعات','e.g. Sales');$('notes').placeholder=words('أضف أي تفاصيل إضافية...','Add extra details...');$('searchBox').placeholder=words('ابحث بالاسم أو التصنيف...','Search name or category...');
+ refreshAll();showSection(document.querySelector('.section-view.active').id);
+});
+resetForm();refreshAll();
+</script>
+</body>
+</html>
